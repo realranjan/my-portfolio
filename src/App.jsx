@@ -17,6 +17,14 @@ const EGG_KEYS = [
   'nightMode',
   'fallingStars',
   'footerSecret',
+  'mobileShake',
+  'mobileLongPress',
+  'mobileTripleTap',
+  'mobileSwipe',
+  'mobilePinch',
+  'mobileDoubleTap',
+  'mobileFooterHold',
+  'mobileRotate',
 ];
 
 function App() {
@@ -27,6 +35,7 @@ function App() {
   const [showFact, setShowFact] = useState(null);
   const [showStars, setShowStars] = useState(false);
   const [footerSecret, setFooterSecret] = useState(false);
+  const [showNightToast, setShowNightToast] = useState(false);
 
   // Helper to mark an egg as found
   const markEggFound = (key) => {
@@ -46,10 +55,16 @@ function App() {
   React.useEffect(() => {
     if (nightMode) {
       document.body.classList.add('bg-gray-900', 'text-white');
+      setShowNightToast(true);
       const timeout = setTimeout(() => setNightMode(false), 5000);
-      return () => clearTimeout(timeout);
+      const toastTimeout = setTimeout(() => setShowNightToast(false), 2000);
+      return () => {
+        clearTimeout(timeout);
+        clearTimeout(toastTimeout);
+      };
     } else {
       document.body.classList.remove('bg-gray-900', 'text-white');
+      setShowNightToast(false);
     }
   }, [nightMode]);
 
@@ -119,6 +134,33 @@ function App() {
         <div className="fixed bottom-24 left-1/2 transform -translate-x-1/2 z-50 bg-gray-900 text-white px-6 py-3 rounded-lg shadow-lg animate-fadeIn">
           You found the secret footer message! 🎉
         </div>
+      )}
+      {/* Night Mode Stars & Moon */}
+      {nightMode && (
+        <>
+          <div className="pointer-events-none fixed inset-0 z-40">
+            {[...Array(30)].map((_, i) => (
+              <div key={i} className="absolute animate-twinkle" style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                width: `${2 + Math.random() * 2}px`,
+                height: `${2 + Math.random() * 2}px`,
+                background: 'white',
+                borderRadius: '50%',
+                opacity: 0.7 + Math.random() * 0.3
+              }} />
+            ))}
+            {/* Moon */}
+            <div className="absolute right-12 top-10 w-16 h-16 bg-white rounded-full shadow-lg" style={{boxShadow: '0 0 40px 10px #fff8'}}>
+              <div className="absolute w-10 h-10 bg-gray-900 rounded-full left-8 top-4 opacity-60"></div>
+            </div>
+          </div>
+          {showNightToast && (
+            <div className="fixed top-8 left-1/2 transform -translate-x-1/2 z-50 bg-gray-900 text-white px-6 py-3 rounded-lg shadow-lg animate-fadeIn">
+              Night Mode Activated! 🌙
+            </div>
+          )}
+        </>
       )}
     </div>
   )

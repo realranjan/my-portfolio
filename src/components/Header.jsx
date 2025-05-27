@@ -17,8 +17,13 @@ const Header = ({ isTalking, onToggleTalking, markEggFound, nightMode, setNightM
   const [showRocket, setShowRocket] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
   const [spinMic, setSpinMic] = useState(false);
+  const [showMobileToast, setShowMobileToast] = useState(null);
+  const [mobileBadge, setMobileBadge] = useState(false);
   const bgClickCount = useRef(0);
   const foundRef = useRef({});
+  const longPressTimeout = useRef();
+  const tapCount = useRef(0);
+  const tapTimer = useRef();
 
   // Helper to mark an egg only once
   const markOnce = (key) => {
@@ -114,6 +119,144 @@ const Header = ({ isTalking, onToggleTalking, markEggFound, nightMode, setNightM
     return () => window.removeEventListener('click', handleBgClick);
   }, [setShowStars]);
 
+  // Shake to reveal (confetti + toast)
+  useEffect(() => {
+    let lastShake = 0;
+    function handleMotion(e) {
+      const acc = e.accelerationIncludingGravity;
+      if (!acc) return;
+      const shake = Math.abs(acc.x) + Math.abs(acc.y) + Math.abs(acc.z);
+      if (shake > 30 && Date.now() - lastShake > 2000) {
+        setShowMobileToast('🎉 You found a mobile secret!');
+        markOnce('mobileShake');
+        lastShake = Date.now();
+      }
+    }
+    if (window.DeviceMotionEvent) {
+      window.addEventListener('devicemotion', handleMotion);
+    }
+    return () => {
+      if (window.DeviceMotionEvent) {
+        window.removeEventListener('devicemotion', handleMotion);
+      }
+    };
+  }, []);
+
+  // Long press on mic
+  const handleMicTouchStart = () => {
+    longPressTimeout.current = setTimeout(() => {
+      setSpinMic(true);
+      setShowMobileToast('🤫 Secret long press!');
+      markOnce('mobileLongPress');
+      setTimeout(() => setSpinMic(false), 1000);
+    }, 600);
+  };
+  const handleMicTouchEnd = () => {
+    clearTimeout(longPressTimeout.current);
+  };
+
+  // Triple tap on name
+  const handleNameTap = () => {
+    tapCount.current += 1;
+    if (tapCount.current === 3) {
+      setMobileBadge(true);
+      setShowMobileToast('🏆 Mobile Master!');
+      markOnce('mobileTripleTap');
+      setTimeout(() => setMobileBadge(false), 2000);
+      tapCount.current = 0;
+      return;
+    }
+    clearTimeout(tapTimer.current);
+    tapTimer.current = setTimeout(() => {
+      tapCount.current = 0;
+    }, 700);
+  };
+
+  // Swipe left/right on background
+  useEffect(() => {
+    let startX = null;
+    function handleTouchStart(e) {
+      if (e.touches.length === 1) {
+        startX = e.touches[0].clientX;
+      }
+    }
+    function handleTouchEnd(e) {
+      if (startX !== null && e.changedTouches.length === 1) {
+        const dx = e.changedTouches[0].clientX - startX;
+        if (Math.abs(dx) > 80) {
+          setShowMobileToast('🚀 You swiped!');
+          markOnce('mobileSwipe');
+        }
+      }
+      startX = null;
+    }
+    window.addEventListener('touchstart', handleTouchStart);
+    window.addEventListener('touchend', handleTouchEnd);
+    return () => {
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, []);
+
+  // Hide mobile toast after 2.5s
+  useEffect(() => {
+    if (showMobileToast) {
+      const t = setTimeout(() => setShowMobileToast(null), 2500);
+      return () => clearTimeout(t);
+    }
+  }, [showMobileToast]);
+
+  // Pinch zoom on header
+  useEffect(() => {
+    let lastDist = null;
+    function handleTouchMove(e) {
+      if (e.touches.length === 2) {
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (lastDist && Math.abs(dist - lastDist) > 40) {
+          setShowMobileToast('🔍 Zoom discovered!');
+          markOnce('mobilePinch');
+        }
+        lastDist = dist;
+      }
+    }
+    function handleTouchEnd(e) {
+      if (e.touches.length < 2) lastDist = null;
+    }
+    window.addEventListener('touchmove', handleTouchMove);
+    window.addEventListener('touchend', handleTouchEnd);
+    return () => {
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, []);
+
+  // Double tap anywhere
+  useEffect(() => {
+    let lastTap = 0;
+    function handleDoubleTap(e) {
+      const now = Date.now();
+      if (now - lastTap < 400) {
+        setShowMobileToast('💖 Double tap detected!');
+        markOnce('mobileDoubleTap');
+      }
+      lastTap = now;
+    }
+    window.addEventListener('touchend', handleDoubleTap);
+    return () => window.removeEventListener('touchend', handleDoubleTap);
+  }, []);
+
+  // Rotate device
+  useEffect(() => {
+    function handleOrientation() {
+      setShowMobileToast('🔄 Orientation changed!');
+      markOnce('mobileRotate');
+    }
+    window.addEventListener('orientationchange', handleOrientation);
+    return () => window.removeEventListener('orientationchange', handleOrientation);
+  }, []);
+
   return (
     <header className="space-y-6 opacity-0 animate-[fadeIn_0.6s_ease-out_0.1s_forwards]">
       <div className="flex items-center gap-3">
@@ -127,6 +270,8 @@ const Header = ({ isTalking, onToggleTalking, markEggFound, nightMode, setNightM
               ${isTalking ? 'bg-gradient-to-br from-gray-400 to-orb-red/80 animate-pulse scale-110' : 'bg-gradient-to-br from-orb-red to-orb-red/60 animate-pulse hover:scale-110 hover:rotate-[360deg] hover:from-orb-red hover:to-orb-red'} ${spinMic ? 'animate-spin-slow' : ''}`}
             onClick={onToggleTalking}
             onDoubleClick={handleMicDoubleClick}
+            onTouchStart={handleMicTouchStart}
+            onTouchEnd={handleMicTouchEnd}
           >
             <Mic className={`w-5 h-5 ${isTalking ? 'text-orb-red' : 'text-white'}`} />
           </div>
@@ -154,8 +299,10 @@ const Header = ({ isTalking, onToggleTalking, markEggFound, nightMode, setNightM
             document.documentElement.style.setProperty('--orb-red', randomColor);
             markOnce('secretClick');
           }}
+          onTouchEnd={handleNameTap}
         >
           Ranjan Vernekar
+          {mobileBadge && <span className="ml-2 px-2 py-1 bg-orb-red text-white rounded-full text-xs animate-bounce">Mobile Master!</span>}
         </h1>
         
         <div className="space-y-2">
@@ -193,6 +340,12 @@ const Header = ({ isTalking, onToggleTalking, markEggFound, nightMode, setNightM
       {showRocket && (
         <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2 animate-rocket">
           <Rocket className="w-8 h-8 text-orb-red" />
+        </div>
+      )}
+
+      {showMobileToast && (
+        <div className="fixed bottom-32 left-1/2 transform -translate-x-1/2 z-50 bg-orb-red text-white px-6 py-3 rounded-lg shadow-lg animate-fadeIn">
+          {showMobileToast}
         </div>
       )}
 
