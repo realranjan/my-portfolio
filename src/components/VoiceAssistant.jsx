@@ -1,11 +1,10 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { AlertCircle, Loader2 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { useConversation } from '@11labs/react';
 
-const VoiceAssistant = ({ setStartConversationRef }) => {
-  const [error, setError] = useState(null);
+const VoiceAssistant = ({ setConversationControlRef, onTalkingChange }) => {
   const [isConnecting, setIsConnecting] = useState(false);
+  const [sessionActive, setSessionActive] = useState(false);
+  const audioStreamRef = useRef(null);
 
   const API_KEY = import.meta.env.VITE_ELEVEN_LABS_API_KEY || '';
   const AGENT_ID = import.meta.env.VITE_ELEVEN_LABS_AGENT_ID || '';
@@ -28,38 +27,63 @@ const VoiceAssistant = ({ setStartConversationRef }) => {
   const conversation = useConversation({
     apiKey: API_KEY,
     onConnect: () => {
-      setError(null);
       setIsConnecting(false);
+      setSessionActive(true);
+      if (onTalkingChange) onTalkingChange(true);
+      console.log('VoiceAssistant: Connected');
     },
     onDisconnect: () => {
-      setError(null);
       setIsConnecting(false);
+      setSessionActive(false);
+      if (onTalkingChange) onTalkingChange(false);
+      console.log('VoiceAssistant: Disconnected');
     },
-    onMessage: () => {
-      setError(null);
-    },
+    onMessage: () => {},
     onError: (error) => {
-      setError(error.message || 'Connection error occurred');
+      setSessionActive(false);
+      if (onTalkingChange) onTalkingChange(false);
+      console.log('VoiceAssistant: Error', error);
     },
     wsUrl: 'wss://api.elevenlabs.io/v1/conversation',
   });
 
+  // Robust cleanup function
+  const forceCleanup = useCallback(() => {
+    setSessionActive(false);
+    if (onTalkingChange) onTalkingChange(false);
+    if (audioStreamRef.current) {
+      audioStreamRef.current.getTracks().forEach(track => {
+        track.stop();
+      });
+      audioStreamRef.current = null;
+      console.log('VoiceAssistant: Audio stream force-stopped.');
+    }
+    if (typeof conversation.disconnect === 'function') {
+      conversation.disconnect();
+      console.log('VoiceAssistant: Force disconnect called.');
+    }
+  }, [conversation, onTalkingChange]);
+
   const startConversation = useCallback(async () => {
+    // Always force cleanup before starting
+    forceCleanup();
     if (!AGENT_ID) {
-      setError('Please set your Voice Agent ID');
+      return;
+    }
+    if (sessionActive) {
+      console.log('VoiceAssistant: Session already active, forcing cleanup and not starting another.');
+      forceCleanup();
       return;
     }
     try {
-      setError(null);
       setIsConnecting(true);
-      await navigator.mediaDevices.getUserMedia({ audio: true });
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      audioStreamRef.current = stream;
       await conversation.startSession({
         agentId: AGENT_ID,
         enableDebugLogs: true,
         connectionConfig: {
-          reconnect: true,
-          reconnectLimit: 3,
-          reconnectInterval: 2000,
+          reconnect: false, // Prevent auto-reconnect
         },
         voiceSettings: {
           stability: 0.5,
@@ -74,34 +98,54 @@ const VoiceAssistant = ({ setStartConversationRef }) => {
           }
         }
       });
+      setSessionActive(true);
+      console.log('VoiceAssistant: Session started');
     } catch (error) {
-      setError(error.message || 'Failed to start conversation');
       setIsConnecting(false);
+      setSessionActive(false);
+      if (onTalkingChange) onTalkingChange(false);
+      console.log('VoiceAssistant: Failed to start', error);
     }
-  }, [conversation, AGENT_ID]);
+  }, [conversation, AGENT_ID, onTalkingChange, sessionActive, forceCleanup]);
+
+  const stopConversation = useCallback(async () => {
+    try {
+      console.log('VoiceAssistant: Attempting to stop conversation...');
+      if (typeof conversation.endSession === 'function') {
+        await conversation.endSession();
+        console.log('VoiceAssistant: Calling conversation.endSession()');
+      } else {
+        console.log('VoiceAssistant: No endSession() method found. Conversation object:', conversation);
+      }
+      if (audioStreamRef.current) {
+        audioStreamRef.current.getTracks().forEach(track => {
+          track.stop();
+        });
+        audioStreamRef.current = null;
+        console.log('VoiceAssistant: Audio stream stopped.');
+      }
+      setSessionActive(false);
+      if (onTalkingChange) onTalkingChange(false);
+      setTimeout(() => {
+        forceCleanup();
+      }, 500);
+      console.log('VoiceAssistant: Session stopped');
+    } catch (error) {
+      setSessionActive(false);
+      if (onTalkingChange) onTalkingChange(false);
+      forceCleanup();
+      console.log('VoiceAssistant: Failed to stop', error);
+    }
+  }, [conversation, onTalkingChange, forceCleanup]);
 
   useEffect(() => {
-    if (setStartConversationRef) {
-      setStartConversationRef(startConversation);
+    if (setConversationControlRef) {
+      setConversationControlRef({ startConversation, stopConversation });
     }
-  }, [setStartConversationRef, startConversation]);
+  }, [setConversationControlRef, startConversation, stopConversation]);
 
-  // Only render error message if present
-  return (
-    <AnimatePresence>
-      {error && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 10 }}
-          className="fixed bottom-6 right-6 z-50 bg-white p-2 rounded shadow-lg text-sm max-w-xs"
-        >
-          <AlertCircle className="inline w-5 h-5 mr-2 text-red-500 align-text-bottom" />
-          {error}
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
+  // No error/status dialog rendered
+  return null;
 };
 
 export default VoiceAssistant;

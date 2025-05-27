@@ -19,6 +19,11 @@ const Work = () => {
       title: "Nutrition Dataset Analysis",
       url: "https://github.com/realranjan/data_analysison_nutritiondataset",
       description: "Performed data analysis on a nutrition dataset to identify key trends and insights related to dietary habits and nutritional content"
+    },
+    {
+      title: "Automated Data Query System",
+      url: "https://github.com/realranjan/automated-data-query-system",
+      description: "Automated Data Query and Retrieval System leveraging Google Gemini API."
     }
   ]
   

@@ -27,6 +27,8 @@ export default {
         shimmer: 'shimmer 8s infinite',
         pulse: 'pulse 2s infinite',
         bounce: 'bounce 2s infinite',
+        'fade-out': 'fadeOut 1s ease-out forwards',
+        rocket: 'rocket 3s ease-out forwards',
       },
       keyframes: {
         fadeIn: {
@@ -37,6 +39,15 @@ export default {
           '0%': { backgroundPosition: '0% center' },
           '50%': { backgroundPosition: '100% center' },
           '100%': { backgroundPosition: '0% center' },
+        },
+        fadeOut: {
+          '0%': { opacity: '1', transform: 'scale(1)' },
+          '100%': { opacity: '0', transform: 'scale(0)' },
+        },
+        rocket: {
+          '0%': { transform: 'translate(-50%, 0) rotate(0deg)' },
+          '50%': { transform: 'translate(-50%, -50vh) rotate(45deg)' },
+          '100%': { transform: 'translate(-50%, -100vh) rotate(90deg)' },
         },
       },
       transitionTimingFunction: {
