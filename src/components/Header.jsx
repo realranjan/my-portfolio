@@ -307,7 +307,7 @@ const Header = ({ isTalking, onToggleTalking, markEggFound, nightMode, setNightM
         
         <div className="space-y-2">
           <p className="text-gray-500 text-sm sm:text-base">
-            Data Scientist | Researcher
+            Data Scientist | Data Analyst | Researcher
           </p>
           
           <div className="flex flex-wrap gap-4 pt-6 tracking-tight text-sm">

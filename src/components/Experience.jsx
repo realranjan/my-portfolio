@@ -15,7 +15,7 @@ const Experience = () => {
             Berozgaar 🙂
           </h3>
           <span className="text-xs sm:text-sm text-orb-red font-medium">
-            2024 - Present
+            2025 - Present
           </span>
         </div>
         <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
@@ -33,7 +33,7 @@ const Experience = () => {
               Data Scientist @ HAEGL TECH PVT LTD
             </h3>
             <span className="text-sm text-gray-500">
-              2023 - 24
+              Aug 2024 - Jan 2025
             </span>
           </div>
         </div>
@@ -44,7 +44,7 @@ const Experience = () => {
               ML Researcher @ Compsoft Technologies
             </h3>
             <span className="text-sm text-gray-500">
-              2023
+              Jun 2024 - Aug 2024
             </span>
           </div>
         </div>
