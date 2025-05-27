@@ -11,6 +11,20 @@ const VoiceAssistant = ({ setStartConversationRef }) => {
   const AGENT_ID = import.meta.env.VITE_ELEVEN_LABS_AGENT_ID || '';
   const DOCUMENT_ID = '9S42CUYaY5KBtY55pMrI';
 
+  const getCurrentDateTime = () => {
+    const now = new Date();
+    const options = {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      timeZoneName: 'long'
+    };
+    return now.toLocaleString('en-US', options);
+  };
+
   const conversation = useConversation({
     apiKey: API_KEY,
     onConnect: () => {
@@ -51,7 +65,14 @@ const VoiceAssistant = ({ setStartConversationRef }) => {
           stability: 0.5,
           similarity_boost: 0.75,
         },
-        documentId: DOCUMENT_ID
+        documentId: DOCUMENT_ID,
+        conversationConfigOverride: {
+          agent: {
+            prompt: {
+              prompt: `The current date and time is ${getCurrentDateTime()}. You are a helpful AI assistant.`
+            }
+          }
+        }
       });
     } catch (error) {
       setError(error.message || 'Failed to start conversation');
