@@ -30,7 +30,7 @@ const Experience = () => {
         <div className="group opacity-75 hover:opacity-100 transition-opacity">
           <div className="flex items-baseline justify-between mb-2">
             <h3 className="text-base font-medium text-gray-800 group-hover:text-orb-red transition-colors">
-              Data Scientist @ HAEGL TECH PVT LTD
+              Data Scientist Intern @ HAEGL TECH PVT LTD
             </h3>
             <span className="text-sm text-gray-500">
               Aug 2024 - Jan 2025
@@ -41,7 +41,7 @@ const Experience = () => {
         <div className="group opacity-75 hover:opacity-100 transition-opacity">
           <div className="flex items-baseline justify-between mb-2">
             <h3 className="text-base font-medium text-gray-800 group-hover:text-orb-red transition-colors">
-              ML Researcher @ Compsoft Technologies
+              ML Intern @ Compsoft Technologies
             </h3>
             <span className="text-sm text-gray-500">
               Jun 2024 - Aug 2024
