@@ -1,19 +1,16 @@
 import React from 'react'
-import { ArrowUpRight } from 'lucide-react'
+import { ArrowUpRight, PhoneCall } from 'lucide-react'
 
 const Header = ({ onTalkToPrans }) => {
   return (
     <header className="space-y-6 opacity-0 animate-[fadeIn_0.6s_ease-out_0.1s_forwards]">
       <div className="flex items-center gap-3">
-        <div 
-          className="w-6 h-6 rounded-full bg-gradient-to-br from-orb-red to-orb-red/60 
-                  animate-pulse hover:scale-125 hover:rotate-[720deg] hover:from-orb-red hover:to-orb-red 
-                  transition-all duration-[1200ms] ease-custom-bezier shadow-lg hover:shadow-orb-red/50 
-                  relative before:absolute before:inset-0 before:rounded-full before:bg-orb-red/20 
-                  before:scale-[1.4] before:opacity-0 hover:before:scale-100 hover:before:opacity-100 
-                  before:transition-all before:duration-[800ms] before:ease-out cursor-pointer"
+        <div
+          className="w-8 h-8 flex items-center justify-center rounded-full bg-gradient-to-br from-orb-red to-orb-red/60 shadow-lg hover:shadow-orb-red/50 animate-pulse transition-all duration-[1200ms] ease-custom-bezier cursor-pointer"
           onClick={onTalkToPrans}
-        ></div>
+        >
+          <PhoneCall className="w-5 h-5 text-white" />
+        </div>
         <span
           className="text-[13px] font-medium tracking-tight bg-gradient-to-r from-gray-900 via-orb-red/90 via-orb-red to-gray-900 bg-[length:200%_auto] animate-shimmer bg-clip-text text-transparent"
         >
