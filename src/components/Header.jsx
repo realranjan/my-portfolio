@@ -1,7 +1,7 @@
 import React from 'react'
 import { ArrowUpRight, PhoneCall } from 'lucide-react'
 
-const Header = ({ onTalkToPrans }) => {
+const Header = ({ onTalkToPrans, voiceStatus }) => {
   return (
     <header className="space-y-6 opacity-0 animate-[fadeIn_0.6s_ease-out_0.1s_forwards]">
       <div className="flex items-center gap-3">
@@ -14,7 +14,7 @@ const Header = ({ onTalkToPrans }) => {
         <span
           className="text-[13px] font-medium tracking-tight bg-gradient-to-r from-gray-900 via-orb-red/90 via-orb-red to-gray-900 bg-[length:200%_auto] animate-shimmer bg-clip-text text-transparent"
         >
-          talk to my prans!
+          {voiceStatus === 'connected' ? 'talking...' : 'talk to janice'}
         </span>
       </div>
 
@@ -25,11 +25,11 @@ const Header = ({ onTalkToPrans }) => {
         
         <div className="space-y-2">
           <p className="text-gray-500 text-sm sm:text-base">
-            Data Scientist | Researcher
+            Data Scientist | Data Analyst
           </p>
           
           <div className="flex flex-wrap gap-4 pt-6 tracking-tight text-sm">
-            <ExternalLink href="https://drive.google.com/file/d/11plCgehIx5sadcsK0GNlyiFF9X-BbvoX/view?usp=sharing" text="Resume" />
+            <ExternalLink href="https://drive.google.com/file/d/1dNy8ybflKvN594MIdRMHqxIU8vJCWfDt/view?usp=sharing" text="Resume" />
             <ExternalLink href="https://www.linkedin.com/in/ranjan-vernekar-a93b08252/" text="LinkedIn" />
             <ExternalLink href="https://github.com/realranjan" text="GitHub" />
             <ExternalLink href="mailto:ranjanvernekar45@gmail.com" text="Email" />

@@ -3,7 +3,7 @@ import { AlertCircle, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useConversation } from '@11labs/react';
 
-const VoiceAssistant = ({ setStartConversationRef }) => {
+const VoiceAssistant = ({ setStartConversationRef, setStatusRef }) => {
   const [error, setError] = useState(null);
   const [isConnecting, setIsConnecting] = useState(false);
 
@@ -101,7 +101,10 @@ const VoiceAssistant = ({ setStartConversationRef }) => {
     if (setStartConversationRef) {
       setStartConversationRef(toggleConversation);
     }
-  }, [setStartConversationRef, toggleConversation]);
+    if (setStatusRef) {
+      setStatusRef(conversation.status);
+    }
+  }, [setStartConversationRef, toggleConversation, setStatusRef, conversation.status]);
 
   // Only render error message if present
   return (

@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import Header from './components/Header'
 import Now from './components/Now'
 import Experience from './components/Experience'
@@ -8,6 +8,7 @@ import VoiceAssistant from './components/VoiceAssistant'
 
 function App() {
   const startConversationRef = useRef(null);
+  const [voiceStatus, setVoiceStatus] = useState('disconnected');
 
   // This function will be called from Header
   const handleTalkToPrans = () => {
@@ -20,7 +21,7 @@ function App() {
     <div className="relative min-h-screen bg-white text-gray-900 py-20 px-4 font-['Geist']">
       <div className="max-w-2xl mx-auto space-y-12 sm:space-y-16">
         {/* Header Section */}
-        <Header onTalkToPrans={handleTalkToPrans} />
+        <Header onTalkToPrans={handleTalkToPrans} voiceStatus={voiceStatus} />
         
         {/* NOW Section */}
         <Now />
@@ -36,7 +37,7 @@ function App() {
       </div>
 
       {/* Voice Assistant */}
-      <VoiceAssistant setStartConversationRef={fn => (startConversationRef.current = fn)} />
+      <VoiceAssistant setStartConversationRef={fn => (startConversationRef.current = fn)} setStatusRef={setVoiceStatus} />
     </div>
   )
 }

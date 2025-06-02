@@ -6,6 +6,11 @@ const Work = () => {
   
   const projects = [
     {
+      title: "Automated Data Query and Retrieval System",
+      url: "https://github.com/realranjan/automated-data-query-system",
+      description: "A system that lets users query CSV data in MongoDB using natural language, powered by Google Gemini API for dynamic query generation and retrieval."
+    },
+    {
       title: "DOCASSIST-AI",
       url: "https://github.com/realranjan/DOCASSIST-AI",
       description: "DocAssist AI is a sophisticated medical report analysis system that leverages machine learning to analyze blood test reports and provide intelligent medical recommendations"

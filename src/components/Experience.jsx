@@ -33,7 +33,7 @@ const Experience = () => {
               Data Scientist  Intern @ HAEGL TECH PVT LTD
             </h3>
             <span className="text-sm text-gray-500">
-              2023 - 24
+              Aug 2024 - Jan 2025
             </span>
           </div>
         </div>
@@ -44,7 +44,7 @@ const Experience = () => {
               ML Intern @ Compsoft Technologies
             </h3>
             <span className="text-sm text-gray-500">
-              2023
+              Jun 2024 - Aug 2024
             </span>
           </div>
         </div>
