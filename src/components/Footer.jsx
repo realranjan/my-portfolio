@@ -10,7 +10,6 @@ const Footer = () => {
       const options = {
         hour: 'numeric',
         minute: 'numeric',
-        timeZone: 'Pacific/Honolulu',
         timeZoneName: 'long'
       }
       setTime(new Date().toLocaleString('en-US', options))

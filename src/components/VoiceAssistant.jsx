@@ -80,11 +80,28 @@ const VoiceAssistant = ({ setStartConversationRef }) => {
     }
   }, [conversation, AGENT_ID]);
 
+  const stopConversation = useCallback(async () => {
+    try {
+      await conversation.endSession();
+    } catch (error) {
+      setError(error.message || 'Failed to stop conversation');
+    }
+  }, [conversation]);
+
+  // Toggle logic: start if disconnected, stop if connected
+  const toggleConversation = useCallback(() => {
+    if (conversation.status === 'connected') {
+      stopConversation();
+    } else {
+      startConversation();
+    }
+  }, [conversation.status, startConversation, stopConversation]);
+
   useEffect(() => {
     if (setStartConversationRef) {
-      setStartConversationRef(startConversation);
+      setStartConversationRef(toggleConversation);
     }
-  }, [setStartConversationRef, startConversation]);
+  }, [setStartConversationRef, toggleConversation]);
 
   // Only render error message if present
   return (
