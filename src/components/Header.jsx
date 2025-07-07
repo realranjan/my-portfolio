@@ -22,6 +22,22 @@ const Header = ({ onTalkToPrans, voiceStatus }) => {
         <h1 className="text-4xl sm:text-5xl font-medium font-instrument tracking-tight bg-gradient-to-r from-gray-900 via-orb-red/90 via-orb-red to-gray-900 bg-[length:200%_auto] animate-shimmer bg-clip-text text-transparent leading-[1.2] py-1">
           Ranjan Vernekar
         </h1>
+        <div className="flex gap-3 pt-2">
+          <a href="https://github.com/realranjan" target="_blank" rel="noopener noreferrer">
+            <img
+              src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white"
+              alt="GitHub"
+              className="h-7"
+            />
+          </a>
+          <a href="https://www.linkedin.com/in/ranjan-vernekar-a93b08252/" target="_blank" rel="noopener noreferrer">
+            <img
+              src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white"
+              alt="LinkedIn"
+              className="h-7"
+            />
+          </a>
+        </div>
         
         <div className="space-y-2">
           <p className="text-gray-500 text-sm sm:text-base">
