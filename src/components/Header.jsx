@@ -1,5 +1,5 @@
 import React from 'react'
-import { ArrowUpRight, PhoneCall } from 'lucide-react'
+import { ArrowUpRight, PhoneCall, Linkedin, Github, Mail, FileText, Twitter } from 'lucide-react'
 
 const Header = ({ onTalkToPrans, voiceStatus }) => {
   return (
@@ -32,6 +32,7 @@ const Header = ({ onTalkToPrans, voiceStatus }) => {
             <ExternalLink href="https://drive.google.com/file/d/1dNy8ybflKvN594MIdRMHqxIU8vJCWfDt/view?usp=sharing" text="Resume" />
             <ExternalLink href="https://www.linkedin.com/in/ranjan-vernekar-a93b08252/" text="LinkedIn" />
             <ExternalLink href="https://github.com/realranjan" text="GitHub" />
+            <ExternalLink href="https://x.com/lifeless_69" text="X (Twitter)" />
             <ExternalLink href="mailto:ranjanvernekar45@gmail.com" text="Email" />
           </div>
         </div>
@@ -40,16 +41,27 @@ const Header = ({ onTalkToPrans, voiceStatus }) => {
   )
 }
 
-const ExternalLink = ({ href, text }) => (
-  <a 
-    href={href} 
-    target="_blank" 
-    rel="noopener noreferrer" 
-    className="group flex items-center gap-1 text-gray-900 transition-all duration-300"
-  >
-    <span className="group-hover:text-orb-red transition-colors">{text}</span>
-    <ArrowUpRight className="w-3.5 h-3.5 opacity-0 -translate-x-2 group-hover:md:opacity-100 group-hover:md:translate-x-0 transition-all duration-300 text-orb-red" />
-  </a>
-)
+const ICONS = {
+  Resume: FileText,
+  LinkedIn: Linkedin,
+  GitHub: Github,
+  'X (Twitter)': Twitter,
+  Email: Mail,
+}
+
+const ExternalLink = ({ href, text }) => {
+  const Icon = ICONS[text] || ArrowUpRight;
+  return (
+    <a 
+      href={href} 
+      target="_blank" 
+      rel="noopener noreferrer" 
+      className="group flex items-center gap-1 text-gray-900 transition-all duration-300"
+    >
+      <Icon className="w-4 h-4 text-gray-400 group-hover:text-orb-red group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_rgba(255,51,51,0.7)] transition-transform transition-colors duration-200" />
+      <span className="group-hover:text-orb-red transition-colors">{text}</span>
+    </a>
+  )
+}
 
 export default Header
