@@ -20,22 +20,22 @@ function App() {
 
   return (
     <>
-      <div className="relative min-h-screen bg-white text-gray-900 py-20 px-4 font-['Geist']">
-        <div className="max-w-2xl mx-auto space-y-12 sm:space-y-16">
-          {/* Header Section */}
-          <Header onTalkToPrans={handleTalkToPrans} voiceStatus={voiceStatus} />
-          {/* NOW Section */}
-          <Now />
-          {/* EXPERIENCE Section */}
-          <Experience />
-          {/* SELECTED WORK Section */}
-          <Work />
-          {/* Footer */}
-          <Footer />
-        </div>
-        {/* Voice Assistant */}
-        <VoiceAssistant setStartConversationRef={fn => (startConversationRef.current = fn)} setStatusRef={setVoiceStatus} />
+    <div className="relative min-h-screen bg-white text-gray-900 py-20 px-4 font-['Geist']">
+      <div className="max-w-2xl mx-auto space-y-12 sm:space-y-16">
+        {/* Header Section */}
+        <Header onTalkToPrans={handleTalkToPrans} voiceStatus={voiceStatus} />
+        {/* NOW Section */}
+        <Now />
+        {/* EXPERIENCE Section */}
+        <Experience />
+        {/* SELECTED WORK Section */}
+        <Work />
+        {/* Footer */}
+        <Footer />
       </div>
+      {/* Voice Assistant */}
+      <VoiceAssistant setStartConversationRef={fn => (startConversationRef.current = fn)} setStatusRef={setVoiceStatus} />
+    </div>
       <Analytics />
     </>
   )
