@@ -1,0 +1,12 @@
+# llm.txt for rsvernekar.space
+
+name: Ranjan Vernekar
+aliases: rsvernekar, Ranjan, Vernekar, lifeless_69
+profession: Data Scientist, Data Analyst, ML Engineer
+website: https://rsvernekar.space/
+github: https://github.com/realranjan
+linkedin: https://www.linkedin.com/in/ranjan-vernekar-a93b08252/
+x: https://x.com/lifeless_69
+email: ranjanvernekar45@gmail.com
+
+summary: Ranjan Vernekar (rsvernekar) is a data scientist, data analyst, and ML engineer based in India. Portfolio includes projects in AI, machine learning, analytics, and business intelligence. Connect on GitHub, LinkedIn, or X (Twitter). 
