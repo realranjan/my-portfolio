@@ -58,9 +58,6 @@ yarn build
 
 The built files will be in the `dist` directory.
 
-## Credits
-
-Original design by [AK Chavan](https://akchavan.vercel.app/)
 
 ## License
 
